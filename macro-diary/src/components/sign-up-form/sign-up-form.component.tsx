@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import { createNewUserWithUsernameAndPassword } from "../../utils/supabase/supabase.utils"
+import { signUpNewAuthUser } from "../../utils/supabase/supabase.utils"
 
 type SignUpFields = {
   username: string
@@ -23,10 +23,12 @@ export const SignUpForm = () => {
   ) => {
     event.preventDefault()
 
-    const { user, session } = await createNewUserWithUsernameAndPassword(
-      username,
-      password,
-    )
+    const { user } = await signUpNewAuthUser(username, password)
+    console.log(user)
+
+    if (!user) {
+      throw new Error("Unable to create user.")
+    }
   }
 
   const handleFormChange: React.ChangeEventHandler<
