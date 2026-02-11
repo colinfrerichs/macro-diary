@@ -1,11 +1,28 @@
-import { StrictMode } from "react"
+// Libraries Single
 import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
+import { StrictMode } from "react"
+import { createBrowserRouter, RouterProvider } from "react-router"
+
 import { App } from "./App"
+import { Auth } from "./routes/auth/authentication.component"
+
 import { store } from "./app/store"
+
 import "./index.css"
 
 const container = document.getElementById("root")
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    Component: App,
+  },
+  {
+    path: "/auth",
+    Component: Auth,
+  },
+])
 
 if (container) {
   const root = createRoot(container)
@@ -13,7 +30,7 @@ if (container) {
   root.render(
     <StrictMode>
       <Provider store={store}>
-        <App />
+        <RouterProvider router={router} />
       </Provider>
     </StrictMode>,
   )

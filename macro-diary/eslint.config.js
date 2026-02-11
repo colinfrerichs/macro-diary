@@ -75,8 +75,15 @@ const eslintConfig = config(
           ],
         },
       ],
-    },
+    },  
   },
+  {
+    name: "dts-overrides",
+    files: ["**/*.d.ts"],
+    rules: {
+      "@typescript-eslint/consistent-type-definitions": "off",
+  },
+},
 
   prettierConfig,
 )
