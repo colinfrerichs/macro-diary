@@ -1,11 +1,12 @@
 import { useState } from "react"
+import { useAppDispatch } from "../../app/hooks"
 
 import {
-  createUserProfile,
-  signUpNewAuthUser,
-} from "../../utils/supabase/supabase.utils"
+  signUserUp,
+  createNewUserProfile,
+} from "../../features/user/userApiSlice"
 
-import { AuthenticationForm } from "../../components/authentication-form/sign-up-form.component"
+import { AuthenticationForm } from "../../components/authentication-form/authentication-form.component"
 
 type AuthFormFields = {
   username: string
@@ -24,18 +25,20 @@ export const AuthRoute = () => {
   const [error, setError] = useState<string | null>(null)
   const { username, password } = formFields
 
+  const dispatch = useAppDispatch()
+
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     void submitForm()
   }
 
   const submitForm = async () => {
-    const { user } = await signUpNewAuthUser(username, password)
+    const { user } = await dispatch(signUserUp({ username, password })).unwrap()
 
     if (!user) {
       setError("Unable to create user. Try again later.")
     } else {
-      await createUserProfile(user)
+      await dispatch(createNewUserProfile(user))
     }
   }
 

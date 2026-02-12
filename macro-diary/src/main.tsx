@@ -5,8 +5,8 @@ import { StrictMode } from "react"
 import { createBrowserRouter, RouterProvider } from "react-router"
 
 import { App } from "./App"
-import { AuthRoute } from "./routes/authentication/authentication.component"
-import { Navigation } from "./routes/navigation/navigation.component"
+import { AuthRoute } from "./routes/authentication/authentication.route"
+import { Navigation } from "./routes/navigation/navigation.route"
 
 import { store } from "./app/store"
 

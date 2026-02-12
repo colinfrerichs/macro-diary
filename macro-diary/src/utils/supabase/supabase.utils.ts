@@ -39,6 +39,8 @@ export const createUserProfile = async (user: User) => {
     if (profileError) throw new Error(profileError.message)
 }
 
+export const fetchUserProfile = () => {console.log("endpoint hit")}
+
 export const onAuthStateChangedListener = (callback: (event: AuthChangeEvent, session: Session | null) => void) => {
     const { data } = supabase.auth.onAuthStateChange(callback)
 

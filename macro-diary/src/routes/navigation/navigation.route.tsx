@@ -2,6 +2,8 @@ import { useEffect } from "react"
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
 import { Outlet } from "react-router"
 
+import { NavigationBar } from "../../components/navigation-bar/navigation-bar.component"
+
 import { onAuthStateChangedListener } from "../../utils/supabase/supabase.utils"
 import { setCurrentUser } from "../../features/user/userApiSlice"
 
@@ -19,8 +21,7 @@ export const Navigation = () => {
 
   return (
     <div>
-      <h1>I am the navigation bar.</h1>
-      {currentUser && <button>Sign Out</button>}
+      <NavigationBar currentUser={currentUser} />
       <Outlet />
     </div>
   )
