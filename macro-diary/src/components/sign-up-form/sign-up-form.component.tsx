@@ -18,13 +18,13 @@ export const SignUpForm = () => {
   )
   const { username, password } = formFields
 
-  const handleFormSubmit = async (
-    event: React.SubmitEvent<HTMLFormElement>,
-  ) => {
+  const handleFormSubmit: React.SubmitEventHandler<HTMLFormElement> = event => {
     event.preventDefault()
+    void submitForm()
+  }
 
+  const submitForm = async () => {
     const { user } = await signUpNewAuthUser(username, password)
-    console.log(user)
 
     if (!user) {
       throw new Error("Unable to create user.")

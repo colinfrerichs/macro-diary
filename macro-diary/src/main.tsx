@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router"
 
 import { App } from "./App"
 import { Auth } from "./routes/auth/authentication.component"
+import { Navigation } from "./routes/navigation/navigation.component"
 
 import { store } from "./app/store"
 
@@ -16,11 +17,12 @@ const container = document.getElementById("root")
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: App,
-  },
-  {
-    path: "/auth",
-    Component: Auth,
+    element: <Navigation />,
+    // errorElement: <ErrorPage />
+    children: [
+      { index: true, element: <App /> },
+      { path: "/auth", element: <Auth /> },
+    ],
   },
 ])
 

@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js"
+import type { User } from "@supabase/supabase-js"
+import type { AuthChangeEvent, Session } from "@supabase/supabase-js"
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY
@@ -27,17 +29,17 @@ export const signInAuthUser = async (email: string, password: string) => {
 
 export const signOutAuthUser = async () => await supabase.auth.signOut()
 
-export const createUserProfile = async (user: object) => {
+export const createUserProfile = async (user: User) => {
     const { error: profileError } = await supabase.from("profiles").insert({
             id: user.id,
-            username: email,
+            username: user.email,
             created_at: user.created_at,
         })
 
     if (profileError) throw new Error(profileError.message)
 }
 
-export const onAuthStateChangedListener = (callback: (event: string, session: any) => void) => {
+export const onAuthStateChangedListener = (callback: (event: AuthChangeEvent, session: Session | null) => void) => {
     const { data } = supabase.auth.onAuthStateChange(callback)
 
     return () => {

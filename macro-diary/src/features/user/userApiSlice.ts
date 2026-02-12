@@ -1,18 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CounterSliceState } from "../counter/counterSlice";
+import type { User } from "@supabase/supabase-js";
 
 type UserSliceState = {
-    currentUser: object
-    status: "idle" | "loading" | "failed"
+    currentUser: User | null
 }
 
 const initialState: UserSliceState = {
-    currentUser: {},
-    status: "idle",
+    currentUser: null,
 }
 
-export const userApiSlice = createSlice({
+export const userSlice = createSlice({
     name: "user",
     initialState,
-    reducers: {}
+    reducers: {
+        setCurrentUser: (state, action) => {
+            state.currentUser = action.payload;
+        }
+    }
 })
+
+export const { setCurrentUser } = userSlice.actions
+export default userSlice.reducer
