@@ -9,8 +9,6 @@ export const Navigation = () => {
   const currentUser = useAppSelector(state => state.user.currentUser)
   const dispatch = useAppDispatch()
 
-  console.log(currentUser)
-
   useEffect(() => {
     const unsubscribe = onAuthStateChangedListener((_, session) => {
       dispatch(setCurrentUser(session?.user ?? null))
@@ -22,6 +20,7 @@ export const Navigation = () => {
   return (
     <div>
       <h1>I am the navigation bar.</h1>
+      {currentUser && <button>Sign Out</button>}
       <Outlet />
     </div>
   )

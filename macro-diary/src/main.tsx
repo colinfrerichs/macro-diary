@@ -5,7 +5,7 @@ import { StrictMode } from "react"
 import { createBrowserRouter, RouterProvider } from "react-router"
 
 import { App } from "./App"
-import { Auth } from "./routes/auth/authentication.component"
+import { AuthRoute } from "./routes/authentication/authentication.component"
 import { Navigation } from "./routes/navigation/navigation.component"
 
 import { store } from "./app/store"
@@ -18,10 +18,9 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Navigation />,
-    // errorElement: <ErrorPage />
     children: [
       { index: true, element: <App /> },
-      { path: "/auth", element: <Auth /> },
+      { path: "/auth", element: <AuthRoute /> },
     ],
   },
 ])
