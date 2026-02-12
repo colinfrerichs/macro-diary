@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import type { PayloadAction } from "@reduxjs/toolkit"
 import type { User, Session } from "@supabase/supabase-js"
 
 import {
   createUserProfile,
+  signInAuthUser,
   signOutAuthUser,
   signUpNewAuthUser,
 } from "../../utils/supabase/supabase.utils"
@@ -11,12 +13,12 @@ type UserSliceState = {
     currentUser: User | null
 }
 
-type SignUpPayload = {
-    username: string
+type AuthPayload = {
+    email: string
     password: string
 }
 
-type SignUpResponse = {
+type AuthResponse = {
     user: User | null
     session: Session | null
 }
@@ -24,6 +26,21 @@ type SignUpResponse = {
 const initialState: UserSliceState = {
     currentUser: null,
 }
+
+export const signUserIn = createAsyncThunk<AuthResponse, AuthPayload, {rejectValue: string}>(
+    "user/signInUser",
+    async({ email, password }, thunkAPI) => {
+        try {
+            return await signInAuthUser(email, password)
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                return thunkAPI.rejectWithValue(err.message)
+            }
+
+            return thunkAPI.rejectWithValue("Unable to log user in.")
+        }
+    }
+)
 
 export const signUserOut = createAsyncThunk(
     "user/signOutUser",
@@ -40,11 +57,11 @@ export const signUserOut = createAsyncThunk(
     }
 )
 
-export const signUserUp = createAsyncThunk<SignUpResponse, SignUpPayload, {rejectValue: string}>(
+export const signUserUp = createAsyncThunk<AuthResponse, AuthPayload, {rejectValue: string}>(
     "user/signUpUser",
-    async({ username, password }, thunkAPI) => {
+    async({ email, password }, thunkAPI) => {
         try {
-            return await signUpNewAuthUser(username, password)
+            return await signUpNewAuthUser(email, password)
         } catch(err: unknown) {
             if (err instanceof Error) {
                 return thunkAPI.rejectWithValue(err.message);
@@ -74,7 +91,7 @@ export const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        setCurrentUser: (state, action) => {
+        setCurrentUser: (state, action: PayloadAction<User | null>) => {
             state.currentUser = action.payload
         }
     },

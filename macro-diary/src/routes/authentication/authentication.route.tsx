@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useAppDispatch } from "../../app/hooks"
 
 import {
+  signUserIn,
   signUserUp,
   createNewUserProfile,
 } from "../../features/user/userApiSlice"
@@ -9,12 +10,12 @@ import {
 import { AuthenticationForm } from "../../components/authentication-form/authentication-form.component"
 
 type AuthFormFields = {
-  username: string
+  email: string
   password: string
 }
 
 const initialAuthFormState = {
-  username: "",
+  email: "",
   password: "",
 }
 
@@ -23,7 +24,7 @@ export const AuthRoute = () => {
     useState<AuthFormFields>(initialAuthFormState)
   const [isSignUp, setIsSignUp] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const { username, password } = formFields
+  const { email, password } = formFields
 
   const dispatch = useAppDispatch()
 
@@ -33,10 +34,20 @@ export const AuthRoute = () => {
   }
 
   const submitForm = async () => {
-    const { user } = await dispatch(signUserUp({ username, password })).unwrap()
+    const authResponse = await dispatch(
+      isSignUp
+        ? signUserUp({ email, password })
+        : signUserIn({ email, password }),
+    ).unwrap()
+
+    const user = authResponse.user
 
     if (!user) {
-      setError("Unable to create user. Try again later.")
+      setError(
+        isSignUp
+          ? "Unable to create user. Try again later."
+          : "Unable to sign user in. Try again later.",
+      )
     } else {
       await dispatch(createNewUserProfile(user))
     }
@@ -56,7 +67,7 @@ export const AuthRoute = () => {
   return (
     <div>
       <AuthenticationForm
-        username={username}
+        email={email}
         password={password}
         onChange={handleChange}
         onSubmit={handleSubmit}

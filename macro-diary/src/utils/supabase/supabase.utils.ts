@@ -32,7 +32,7 @@ export const signOutAuthUser = async () => await supabase.auth.signOut()
 export const createUserProfile = async (user: User) => {
     const { error: profileError } = await supabase.from("profiles").insert({
             id: user.id,
-            username: user.email,
+            email: user.email,
             created_at: user.created_at,
         })
 

@@ -1,5 +1,5 @@
 type AuthenticationFormProps = {
-  username: string
+  email: string
   password: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void
@@ -8,7 +8,7 @@ type AuthenticationFormProps = {
 }
 
 export const AuthenticationForm = ({
-  username,
+  email,
   password,
   onChange,
   onSubmit,
@@ -17,13 +17,13 @@ export const AuthenticationForm = ({
 }: AuthenticationFormProps) => {
   return (
     <form onSubmit={onSubmit}>
-      <label htmlFor="username">Username:</label>
+      <label htmlFor="email">Username:</label>
       <input
-        id="username"
-        name="username"
+        id="email"
+        name="email"
         onChange={onChange}
         type="text"
-        value={username}
+        value={email}
       />
       <label htmlFor="password">Password</label>
       <input
