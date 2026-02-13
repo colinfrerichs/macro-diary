@@ -11,6 +11,9 @@ import {
 
 type UserSliceState = {
     currentUser: User | null
+    session: Session | null
+    loading: boolean
+    error: string | null | object
 }
 
 type AuthPayload = {
@@ -25,6 +28,9 @@ type AuthResponse = {
 
 const initialState: UserSliceState = {
     currentUser: null,
+    session: null,
+    loading: false,
+    error: null,
 }
 
 export const signUserIn = createAsyncThunk<AuthResponse, AuthPayload, {rejectValue: string}>(
@@ -95,6 +101,48 @@ export const userSlice = createSlice({
             state.currentUser = action.payload
         }
     },
+    extraReducers: builder => {
+        builder
+            .addCase(signUserIn.pending, state => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(signUserIn.fulfilled, (state, action) => {
+                state.loading = false
+                state.currentUser = action.payload.user
+                state.session = action.payload.session
+            })
+            .addCase(signUserIn.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload ?? "Sign in failed."
+            })
+            .addCase(signUserOut.pending, state => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(signUserOut.fulfilled, state => {
+                state.loading = false
+                state.currentUser = null
+                state.session = null
+            })
+            .addCase(signUserOut.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload ?? "Sign out failed."
+            })
+            .addCase(signUserUp.pending, state => {
+                state.loading = true
+                state.error = null
+            })
+            .addCase(signUserUp.fulfilled, (state, action) => {
+                state.loading = false
+                state.currentUser = action.payload.user
+                state.session = action.payload.session
+            })
+            .addCase(signUserUp.rejected, (state, action) => {
+                state.loading = false
+                state.error = action.payload ?? "Failed to sign user up."
+            })
+    }
 })
 
 export const { setCurrentUser } = userSlice.actions

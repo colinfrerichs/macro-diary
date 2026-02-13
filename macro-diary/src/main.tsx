@@ -8,9 +8,9 @@ import { onAuthStateChangedListener } from "./utils/supabase/supabase.utils"
 import { setCurrentUser } from "./features/user/userApiSlice"
 import { useAppDispatch } from "./app/hooks"
 
-import { App } from "./App"
 import { AuthRoute } from "./routes/authentication/authentication.route"
 import { Navigation } from "./routes/navigation/navigation.route"
+import { Home } from "./routes/home/home.route"
 import { PublicOnlyRoute } from "./routes/public-route/public-only-route.route"
 import { ProtectedRoute } from "./routes/protected-route/protected-route.route"
 
@@ -28,10 +28,19 @@ const router = createBrowserRouter([
     path: "/",
     element: <ProtectedRoute />,
     children: [
-      { index: true, element: <Navigation /> },
       {
-        path: "app",
-        element: <App />,
+        path: "/",
+        element: <Navigation />,
+        children: [
+          {
+            index: true,
+            element: <Home />,
+          },
+          {
+            path: "/profile",
+            element: <h1>Profile page.</h1>,
+          },
+        ],
       },
     ],
   },
