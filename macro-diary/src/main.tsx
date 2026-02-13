@@ -1,29 +1,57 @@
 // Libraries Single
 import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
-import { StrictMode } from "react"
+import { StrictMode, useEffect } from "react"
 import { createBrowserRouter, RouterProvider } from "react-router"
+
+import { onAuthStateChangedListener } from "./utils/supabase/supabase.utils"
+import { setCurrentUser } from "./features/user/userApiSlice"
+import { useAppDispatch } from "./app/hooks"
 
 import { App } from "./App"
 import { AuthRoute } from "./routes/authentication/authentication.route"
 import { Navigation } from "./routes/navigation/navigation.route"
+import { PublicOnlyRoute } from "./routes/public-route/public-only-route.route"
+import { ProtectedRoute } from "./routes/protected-route/protected-route.route"
 
 import { store } from "./app/store"
 
-import "./index.css"
-
-const container = document.getElementById("root")
+import "./index.scss"
 
 const router = createBrowserRouter([
   {
+    path: "/auth",
+    element: <PublicOnlyRoute />,
+    children: [{ index: true, element: <AuthRoute /> }],
+  },
+  {
     path: "/",
-    element: <Navigation />,
+    element: <ProtectedRoute />,
     children: [
-      { index: true, element: <App /> },
-      { path: "/auth", element: <AuthRoute /> },
+      { index: true, element: <Navigation /> },
+      {
+        path: "app",
+        element: <App />,
+      },
     ],
   },
 ])
+
+const container = document.getElementById("root")
+
+const AppRoot = () => {
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChangedListener((_, session) => {
+      dispatch(setCurrentUser(session?.user ?? null))
+    })
+
+    return unsubscribe
+  }, [dispatch])
+
+  return <RouterProvider router={router} />
+}
 
 if (container) {
   const root = createRoot(container)
@@ -31,7 +59,7 @@ if (container) {
   root.render(
     <StrictMode>
       <Provider store={store}>
-        <RouterProvider router={router} />
+        <AppRoot />
       </Provider>
     </StrictMode>,
   )
