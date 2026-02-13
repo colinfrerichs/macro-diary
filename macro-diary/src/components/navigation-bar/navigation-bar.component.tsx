@@ -16,7 +16,7 @@ export const NavigationBar = ({ currentUser }: NavigationBarProps) => {
   return (
     <header className="nav">
       <Link to="/" className="nav__logo">
-        Macro Diary
+        🥦 Macro Diary
       </Link>
 
       <div className="nav__right">
