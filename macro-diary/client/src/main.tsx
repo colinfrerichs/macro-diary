@@ -4,7 +4,6 @@ import { Provider } from "react-redux"
 import { StrictMode, useEffect } from "react"
 import { createBrowserRouter, RouterProvider } from "react-router"
 
-import { onAuthStateChangedListener } from "./utils/supabase/supabase.utils"
 import { setCurrentUser } from "./features/user/userApiSlice"
 import { useAppDispatch } from "./app/hooks"
 

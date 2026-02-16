@@ -2,13 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import type { PayloadAction } from "@reduxjs/toolkit"
 import type { User, Session } from "@supabase/supabase-js"
 
-import {
-  createUserProfile,
-  signInAuthUser,
-  signOutAuthUser,
-  signUpNewAuthUser,
-} from "../../utils/supabase/supabase.utils"
-
 type UserSliceState = {
     currentUser: User | null
     session: Session | null
@@ -33,35 +26,22 @@ const initialState: UserSliceState = {
     error: null,
 }
 
-export const signUserIn = createAsyncThunk<AuthResponse, AuthPayload, {rejectValue: string}>(
-    "user/signInUser",
-    async({ email, password }, thunkAPI) => {
-        try {
-            return await signInAuthUser(email, password)
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                return thunkAPI.rejectWithValue(err.message)
-            }
+//  
 
-            return thunkAPI.rejectWithValue("Unable to log user in.")
-        }
-    }
-)
+// export const signUserOut = createAsyncThunk(
+//     "user/signOutUser",
+//     async (_, thunkAPI) => {
+//         try {
+//             await signOutAuthUser()
+//         } catch (err: unknown) {
+//             if (err instanceof Error) {
+//                 return thunkAPI.rejectWithValue(err.message)
+//             }
 
-export const signUserOut = createAsyncThunk(
-    "user/signOutUser",
-    async (_, thunkAPI) => {
-        try {
-            await signOutAuthUser()
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                return thunkAPI.rejectWithValue(err.message)
-            }
-
-            return thunkAPI.rejectWithValue("Unable to log user out.")
-        }
-    }
-)
+//             return thunkAPI.rejectWithValue("Unable to log user out.")
+//         }
+//     }
+// )
 
 export const signUserUp = createAsyncThunk<AuthResponse, AuthPayload, {rejectValue: string}>(
     "user/signUpUser",
@@ -78,20 +58,20 @@ export const signUserUp = createAsyncThunk<AuthResponse, AuthPayload, {rejectVal
     }
 )
 
-export const createNewUserProfile = createAsyncThunk(
-    "user/createProfile",
-    async(user: User, thunkAPI) => {
-        try {
-            await createUserProfile(user)
-        } catch(err: unknown) {
-            if (err instanceof Error) {
-                return thunkAPI.rejectWithValue(err.message)
-            }
+// export const createNewUserProfile = createAsyncThunk(
+//     "user/createProfile",
+//     async(user: User, thunkAPI) => {
+//         try {
+//             await createUserProfile(user)
+//         } catch(err: unknown) {
+//             if (err instanceof Error) {
+//                 return thunkAPI.rejectWithValue(err.message)
+//             }
 
-            return thunkAPI.rejectWithValue("Unable to create user profile.")
-        }
-    }
-)
+//             return thunkAPI.rejectWithValue("Unable to create user profile.")
+//         }
+//     }
+// )
 
 export const userSlice = createSlice({
     name: "user",

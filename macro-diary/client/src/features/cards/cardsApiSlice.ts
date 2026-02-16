@@ -1,7 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-import { fetchUserCards } from "../../utils/supabase/supabase.utils";
-
 type CardPayload = {
     userId: string
 }
@@ -17,18 +15,18 @@ type Card = {
   created_at: string
 }
 
+async function getCards(): Promise<Card[]> {
+    const response = await fetch("http://localhost:5000/api/cards")
+
+    if (!response.ok) throw new Error("Failed to fetch cards")
+
+    return response.json() as Promise<Card[]>
+}
+
 export const fetchCards = createAsyncThunk<Card[], CardPayload, {rejectValue: string}>(
     "cards/fetchCards",
-    async({ userId }, thunkAPI) => {
-        try {
-            return await fetchUserCards(userId)
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                return thunkAPI.rejectWithValue(err.message)
-            }
-        }
-
-        return thunkAPI.rejectWithValue("An error occurred fetching cards. Please refresh page.")
+    async () => {
+        return await getCards()
     }
 )
 
