@@ -1,7 +1,7 @@
 import { Link } from "react-router"
 
 import { useAppDispatch, useAppSelector } from "../../app/hooks"
-import { signUserOut } from "../../features/user/userApiSlice"
+// import { signUserOut } from "../../features/user/userApiSlice"
 
 import "./profile-dropdown.styles.scss"
 
@@ -20,9 +20,9 @@ export const ProfileDropdown = ({
     void signOut()
   }
 
-  const signOut = async () => {
-    await dispatch(signUserOut())
-  }
+  // const signOut = async () => {
+  //   await dispatch(signUserOut())
+  // }
 
   return (
     <div className="profile-dropdown">

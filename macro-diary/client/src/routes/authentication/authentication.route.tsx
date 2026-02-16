@@ -3,9 +3,8 @@ import { useState } from "react"
 import { useAppDispatch } from "../../app/hooks"
 
 import {
-  signUserIn,
+  // signUserIn,
   signUserUp,
-  createNewUserProfile,
 } from "../../features/user/userApiSlice"
 
 import { AuthenticationForm } from "../../components/authentication-form/authentication-form.component"
@@ -34,9 +33,13 @@ export const AuthRoute = () => {
 
   const authFlow = async () => {
     try {
-      const authResponse = isSignUp
-        ? await dispatch(signUserUp({ email, password })).unwrap()
-        : await dispatch(signUserIn({ email, password })).unwrap()
+      // const authResponse = isSignUp
+      //   ? await dispatch(signUserUp({ email, password })).unwrap()
+      //   : await dispatch(signUserIn({ email, password })).unwrap()
+
+      const authResponse = await dispatch(
+        signUserUp({ email, password }),
+      ).unwrap()
 
       const user = authResponse.user
 
@@ -47,10 +50,6 @@ export const AuthRoute = () => {
             : "Unable to sign user in. Try again later.",
         )
         return null
-      }
-
-      if (isSignUp) {
-        await dispatch(createNewUserProfile(user))
       }
 
       console.log(`Sign in successful: ${user.email ?? "unknown email"}`)

@@ -1,10 +1,7 @@
 import cors from "cors"
-import dotenv from "dotenv"
 import express from "express"
 
-import cardsRouter from "./routes/cards"
-
-dotenv.config()
+import userRouter from "./routes/auth.route"
 
 const app = express()
 const PORT = 5000
@@ -17,4 +14,4 @@ app.listen(PORT, () => {
 })
 
 // Routes
-app.use("/api/cards", cardsRouter)
+app.use("/api/auth", userRouter)

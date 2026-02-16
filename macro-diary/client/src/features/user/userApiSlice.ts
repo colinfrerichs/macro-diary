@@ -46,8 +46,23 @@ const initialState: UserSliceState = {
 export const signUserUp = createAsyncThunk<AuthResponse, AuthPayload, {rejectValue: string}>(
     "user/signUpUser",
     async({ email, password }, thunkAPI) => {
+        console.log("hit")
         try {
-            return await signUpNewAuthUser(email, password)
+            const response = await fetch("http://localhost:5000/api/auth/signup", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({ email, password })
+            })
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                return thunkAPI.rejectWithValue(errorData.message || "Failed to sign up")
+            }
+
+            const data = await response.json()
+            return data
         } catch(err: unknown) {
             if (err instanceof Error) {
                 return thunkAPI.rejectWithValue(err.message);
@@ -80,48 +95,6 @@ export const userSlice = createSlice({
         setCurrentUser: (state, action: PayloadAction<User | null>) => {
             state.currentUser = action.payload
         }
-    },
-    extraReducers: builder => {
-        builder
-            .addCase(signUserIn.pending, state => {
-                state.loading = true
-                state.error = null
-            })
-            .addCase(signUserIn.fulfilled, (state, action) => {
-                state.loading = false
-                state.currentUser = action.payload.user
-                state.session = action.payload.session
-            })
-            .addCase(signUserIn.rejected, (state, action) => {
-                state.loading = false
-                state.error = action.payload ?? "Sign in failed."
-            })
-            .addCase(signUserOut.pending, state => {
-                state.loading = true
-                state.error = null
-            })
-            .addCase(signUserOut.fulfilled, state => {
-                state.loading = false
-                state.currentUser = null
-                state.session = null
-            })
-            .addCase(signUserOut.rejected, (state, action) => {
-                state.loading = false
-                state.error = action.payload ?? "Sign out failed."
-            })
-            .addCase(signUserUp.pending, state => {
-                state.loading = true
-                state.error = null
-            })
-            .addCase(signUserUp.fulfilled, (state, action) => {
-                state.loading = false
-                state.currentUser = action.payload.user
-                state.session = action.payload.session
-            })
-            .addCase(signUserUp.rejected, (state, action) => {
-                state.loading = false
-                state.error = action.payload ?? "Failed to sign user up."
-            })
     }
 })
 

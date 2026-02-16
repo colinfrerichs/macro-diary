@@ -1,11 +1,8 @@
 // Libraries Single
 import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
-import { StrictMode, useEffect } from "react"
+import { StrictMode } from "react"
 import { createBrowserRouter, RouterProvider } from "react-router"
-
-import { setCurrentUser } from "./features/user/userApiSlice"
-import { useAppDispatch } from "./app/hooks"
 
 import { AuthRoute } from "./routes/authentication/authentication.route"
 import { Navigation } from "./routes/navigation/navigation.route"
@@ -48,16 +45,6 @@ const router = createBrowserRouter([
 const container = document.getElementById("root")
 
 const AppRoot = () => {
-  const dispatch = useAppDispatch()
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChangedListener((_, session) => {
-      dispatch(setCurrentUser(session?.user ?? null))
-    })
-
-    return unsubscribe
-  }, [dispatch])
-
   return <RouterProvider router={router} />
 }
 

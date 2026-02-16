@@ -1,10 +1,10 @@
 import { supabaseAdmin } from "../config/supabase"
 
-export const createUser = async ({email, password}: { email: string, password: string}) => {
+export const createUser = async ({email, hashedPassword}: { email: string, hashedPassword: string}) => {
     const { data, error } = await supabaseAdmin
     .from("users")
     .insert([
-        { email, password }
+        { email, hashed_password: hashedPassword }
     ])
     .select()
     .single()
@@ -21,7 +21,7 @@ export const findUserByEmail = async (email: string) => {
     .from("users")
     .select("*")
     .eq("email", email)
-    .single()
+    .maybeSingle()
 
     if (error) {
         throw new Error(error.message)
