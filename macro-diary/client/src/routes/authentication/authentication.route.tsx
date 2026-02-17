@@ -2,10 +2,7 @@ import { useNavigate } from "react-router"
 import { useState } from "react"
 import { useAppDispatch } from "../../app/hooks"
 
-import {
-  // signUserIn,
-  signUserUp,
-} from "../../features/user/userApiSlice"
+import { signUserIn, signUserUp } from "../../features/user/userApiSlice"
 
 import { AuthenticationForm } from "../../components/authentication-form/authentication-form.component"
 
@@ -33,13 +30,9 @@ export const AuthRoute = () => {
 
   const authFlow = async () => {
     try {
-      // const authResponse = isSignUp
-      //   ? await dispatch(signUserUp({ email, password })).unwrap()
-      //   : await dispatch(signUserIn({ email, password })).unwrap()
-
-      const authResponse = await dispatch(
-        signUserUp({ email, password }),
-      ).unwrap()
+      const authResponse = isSignUp
+        ? await dispatch(signUserUp({ email, password })).unwrap()
+        : await dispatch(signUserIn({ email, password })).unwrap()
 
       const user = authResponse.user
 

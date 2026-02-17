@@ -1,8 +1,11 @@
 // Libraries Single
 import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
-import { StrictMode } from "react"
+import { StrictMode, useEffect } from "react"
 import { createBrowserRouter, RouterProvider } from "react-router"
+import { useAppDispatch } from "./app/hooks"
+
+import { setCurrentUser } from "./features/user/userApiSlice"
 
 import { AuthRoute } from "./routes/authentication/authentication.route"
 import { Navigation } from "./routes/navigation/navigation.route"
@@ -45,6 +48,20 @@ const router = createBrowserRouter([
 const container = document.getElementById("root")
 
 const AppRoot = () => {
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    const token = localStorage.getItem("token")
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]))
+        dispatch(setCurrentUser({ id: payload.userId, email: payload.email }))
+      } catch {
+        localStorage.removeItem("token")
+      }
+    }
+  }, [dispatch])
+
   return <RouterProvider router={router} />
 }
 

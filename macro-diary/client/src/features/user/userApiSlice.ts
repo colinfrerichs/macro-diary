@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import type { PayloadAction } from "@reduxjs/toolkit"
 import type { User, Session } from "@supabase/supabase-js"
 
 type UserSliceState = {
@@ -26,27 +25,16 @@ const initialState: UserSliceState = {
     error: null,
 }
 
-//  
+export const signUserOut = createAsyncThunk(
+    "user/signOutUser",
+    async (_, thunkAPI) => {
+        console.log('logout hit')
+    }
+)
 
-// export const signUserOut = createAsyncThunk(
-//     "user/signOutUser",
-//     async (_, thunkAPI) => {
-//         try {
-//             await signOutAuthUser()
-//         } catch (err: unknown) {
-//             if (err instanceof Error) {
-//                 return thunkAPI.rejectWithValue(err.message)
-//             }
-
-//             return thunkAPI.rejectWithValue("Unable to log user out.")
-//         }
-//     }
-// )
-
-export const signUserUp = createAsyncThunk<AuthResponse, AuthPayload, {rejectValue: string}>(
+export const signUserUp = createAsyncThunk<AuthResponse, AuthPayload, {rejectValue: string}> (
     "user/signUpUser",
     async({ email, password }, thunkAPI) => {
-        console.log("hit")
         try {
             const response = await fetch("http://localhost:5000/api/auth/signup", {
                 method: "POST",
@@ -58,10 +46,12 @@ export const signUserUp = createAsyncThunk<AuthResponse, AuthPayload, {rejectVal
 
             if (!response.ok) {
                 const errorData = await response.json();
-                return thunkAPI.rejectWithValue(errorData.message || "Failed to sign up")
+                return thunkAPI.rejectWithValue(errorData.message || "Failed to sign up.")
             }
 
             const data = await response.json()
+            localStorage.setItem("token", data.token)
+
             return data
         } catch(err: unknown) {
             if (err instanceof Error) {
@@ -73,28 +63,53 @@ export const signUserUp = createAsyncThunk<AuthResponse, AuthPayload, {rejectVal
     }
 )
 
-// export const createNewUserProfile = createAsyncThunk(
-//     "user/createProfile",
-//     async(user: User, thunkAPI) => {
-//         try {
-//             await createUserProfile(user)
-//         } catch(err: unknown) {
-//             if (err instanceof Error) {
-//                 return thunkAPI.rejectWithValue(err.message)
-//             }
+export const signUserIn = createAsyncThunk<AuthResponse, AuthPayload, {rejectValue: string}> (
+    "users/signInUser",
+    async({ email, password }, thunkAPI) => {
+        try {
+            const response = await fetch("http://localhost:5000/api/auth/signin", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({email, password})
+            })
 
-//             return thunkAPI.rejectWithValue("Unable to create user profile.")
-//         }
-//     }
-// )
+            if (!response.ok) {
+                const errorData = await response.json()
+                return thunkAPI.rejectWithValue(errorData.message || "Failed to sign in.")
+            }
+
+            const data = await response.json()
+            localStorage.setItem("token", data.token)
+
+            return data
+        } catch(err: unknown) {
+            if (err instanceof Error) {
+                return thunkAPI.rejectWithValue(err.message)
+            }
+
+            return thunkAPI.rejectWithValue("Unable to sign user in.")
+        }
+    }
+)
 
 export const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
-        setCurrentUser: (state, action: PayloadAction<User | null>) => {
+        setCurrentUser: (state, action) => {
             state.currentUser = action.payload
         }
+    },
+    extraReducers: builder => {
+        builder
+        .addCase(signUserUp.fulfilled, (state, action) => {
+            state.currentUser = action.payload.user
+        })
+        .addCase(signUserIn.fulfilled, (state, action) => {
+            state.currentUser = action.payload.user
+        })
     }
 })
 
