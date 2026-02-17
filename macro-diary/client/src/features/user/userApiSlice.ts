@@ -25,13 +25,6 @@ const initialState: UserSliceState = {
     error: null,
 }
 
-export const signUserOut = createAsyncThunk(
-    "user/signOutUser",
-    async (_, thunkAPI) => {
-        console.log('logout hit')
-    }
-)
-
 export const signUserUp = createAsyncThunk<AuthResponse, AuthPayload, {rejectValue: string}> (
     "user/signUpUser",
     async({ email, password }, thunkAPI) => {
@@ -45,7 +38,7 @@ export const signUserUp = createAsyncThunk<AuthResponse, AuthPayload, {rejectVal
             })
 
             if (!response.ok) {
-                const errorData = await response.json();
+                const errorData = await response.json()
                 return thunkAPI.rejectWithValue(errorData.message || "Failed to sign up.")
             }
 
@@ -98,6 +91,10 @@ export const userSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
+        logout: (state) => {
+            state.currentUser = null
+            localStorage.removeItem("token")
+        },
         setCurrentUser: (state, action) => {
             state.currentUser = action.payload
         }
@@ -113,5 +110,5 @@ export const userSlice = createSlice({
     }
 })
 
-export const { setCurrentUser } = userSlice.actions
+export const { logout, setCurrentUser } = userSlice.actions
 export default userSlice.reducer

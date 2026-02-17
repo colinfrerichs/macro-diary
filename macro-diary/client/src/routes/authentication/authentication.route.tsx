@@ -45,7 +45,6 @@ export const AuthRoute = () => {
         return null
       }
 
-      console.log(`Sign in successful: ${user.email ?? "unknown email"}`)
       navigate("/", { replace: true })
       return user
     } catch (err: unknown) {
