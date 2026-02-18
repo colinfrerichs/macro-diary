@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
 import { useAppDispatch } from "../../app/hooks"
 import { addCard } from "../../features/cards/cardsApiSlice"
+import { closeModal } from "../../features/cards/cardsApiSlice"
 
 import "./card-editor-modal.styles.scss"
 
-export const CardEditorModal = ({ card, onClose }) => {
+export const CardEditorModal = ({ card }) => {
   const [formState, setFormState] = useState(card)
   const dispatch = useAppDispatch()
 
@@ -31,6 +32,10 @@ export const CardEditorModal = ({ card, onClose }) => {
     // } else {
     // }
     dispatch(addCard(formState))
+  }
+
+  const handleClose = () => {
+    dispatch(closeModal())
   }
 
   return (
@@ -72,7 +77,9 @@ export const CardEditorModal = ({ card, onClose }) => {
         </div>
 
         <div className="card-editor-modal__actions">
-          <button className="btn-cancel">Cancel</button>
+          <button className="btn-cancel" onClick={handleClose}>
+            Cancel
+          </button>
           <button className="btn-save" onClick={handleSave}>
             Save
           </button>
