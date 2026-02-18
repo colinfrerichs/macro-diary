@@ -21,7 +21,7 @@ const initialAuthFormState = {
 export const AuthRoute = () => {
   const [formFields, setFormFields] =
     useState<AuthFormFields>(initialAuthFormState)
-  const [isSignUp, setIsSignUp] = useState(true)
+  const [isSignUp, setIsSignUp] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const { email, password } = formFields

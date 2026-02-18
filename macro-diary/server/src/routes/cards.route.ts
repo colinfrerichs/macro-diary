@@ -1,9 +1,9 @@
 import { Router } from "express"
-
-import { getCards } from "../controllers/card.controller"
+import { getCards, addCard } from "../controllers/cards.controller"
 
 const router = Router()
 
-router.get("/cards", getCards)
+router.get("/", getCards)
+router.post("/", addCard)
 
 export default router

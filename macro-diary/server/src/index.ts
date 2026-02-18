@@ -4,8 +4,9 @@ import dotenv from "dotenv"
 
 import { authenticateJWT } from "./middleware/auth.middleware"
 
-import authRouter from "./routes/auth.route"
 import cardRouter from "./routes/cards.route"
+import sessionRouter from "./routes/session.route"
+import userRouter from "./routes/users.route"
 
 const app = express()
 const PORT = 5000
@@ -23,5 +24,6 @@ app.listen(PORT, () => {
 })
 
 // Routes
-app.use("/api/auth", authRouter)
-app.use("/api/user", authenticateJWT, cardRouter)
+app.use("/api/users", userRouter)
+app.use("/api/session", sessionRouter)
+app.use("/api/cards", authenticateJWT, cardRouter)

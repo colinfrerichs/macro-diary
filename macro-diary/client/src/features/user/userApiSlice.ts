@@ -1,11 +1,11 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { User, Session } from "@supabase/supabase-js"
 
 type UserSliceState = {
     currentUser: User | null
     session: Session | null
     loading: boolean
-    error: string | null | object
+    error: string | null
 }
 
 type AuthPayload = {
@@ -25,14 +25,16 @@ const initialState: UserSliceState = {
     error: null,
 }
 
+const API_URL = "http://localhost:5000/api"
+
 export const signUserUp = createAsyncThunk<AuthResponse, AuthPayload, {rejectValue: string}> (
     "user/signUpUser",
     async({ email, password }, thunkAPI) => {
         try {
-            const response = await fetch("http://localhost:5000/api/auth/signup", {
+            const response = await fetch(`${API_URL}/users`, {
                 method: "POST",
                 headers: {
-                    "Content-type": "application/json",
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ email, password })
             })
@@ -60,10 +62,10 @@ export const signUserIn = createAsyncThunk<AuthResponse, AuthPayload, {rejectVal
     "users/signInUser",
     async({ email, password }, thunkAPI) => {
         try {
-            const response = await fetch("http://localhost:5000/api/auth/signin", {
+            const response = await fetch(`${API_URL}/session`, {
                 method: "POST",
                 headers: {
-                    "Content-type": "application/json",
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({email, password})
             })
@@ -93,9 +95,11 @@ export const userSlice = createSlice({
     reducers: {
         logout: (state) => {
             state.currentUser = null
+            state.error = null
+            state.session = null
             localStorage.removeItem("token")
         },
-        setCurrentUser: (state, action) => {
+        setCurrentUser: (state, action: PayloadAction<User | null>) => {
             state.currentUser = action.payload
         }
     },
@@ -106,6 +110,7 @@ export const userSlice = createSlice({
         })
         .addCase(signUserIn.fulfilled, (state, action) => {
             state.currentUser = action.payload.user
+            state.session = action.payload.session
         })
     }
 })

@@ -6,12 +6,13 @@ import { getCards } from "../../features/cards/cardsApiSlice"
 import { Card } from "../../components/card/card.component"
 import { CardEditorModal } from "../../components/card-editor-modal/card-editor-modal.component"
 
-import "./home.styles.scss"
+import "./dashboard.styles.scss"
 
-export const Home = () => {
+export const Dashboard = () => {
+  const { cards, selectedCard, isModalOpen } = useAppSelector(
+    state => state.cards,
+  )
   const dispatch = useAppDispatch()
-  const cards = useAppSelector(state => state.cards.cards)
-  const isModalOpen = useAppSelector(state => state.cards.isModalOpen)
 
   useEffect(() => {
     dispatch(getCards())
@@ -21,7 +22,7 @@ export const Home = () => {
     <div className="card-container">
       {isModalOpen && (
         <div className="card-editor-modal">
-          <CardEditorModal />
+          <CardEditorModal card={selectedCard} />
         </div>
       )}
       <h1>Cards</h1>

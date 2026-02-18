@@ -9,7 +9,7 @@ import { setCurrentUser } from "./features/user/userApiSlice"
 
 import { AuthRoute } from "./routes/authentication/authentication.route"
 import { Navigation } from "./routes/navigation/navigation.route"
-import { Home } from "./routes/home/home.route"
+import { Dashboard } from "./routes/dashboard/dashboard.route"
 import { PublicOnlyRoute } from "./routes/public-route/public-only-route.route"
 import { ProtectedRoute } from "./routes/protected-route/protected-route.route"
 
@@ -33,7 +33,7 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Home />,
+            element: <Dashboard />,
           },
           {
             path: "/profile",

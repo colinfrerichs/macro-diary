@@ -1,17 +1,14 @@
 import { useState } from "react"
 import { Link } from "react-router"
-import type { User } from "@supabase/supabase-js"
+import { useAppSelector } from "../../app/hooks"
 
 import { ProfileDropdown } from "../profile-dropdown/profile-dropdown.component"
 
 import "./navigation.styles.scss"
 
-type NavigationBarProps = {
-  currentUser: User | null
-}
-
-export const NavigationBar = ({ currentUser }: NavigationBarProps) => {
+export const NavigationBar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false)
+  const currentUser = useAppSelector(state => state.user.currentUser)
 
   return (
     <header className="nav">
@@ -45,7 +42,7 @@ export const NavigationBar = ({ currentUser }: NavigationBarProps) => {
           </div>
         ) : (
           <Link to="/auth" className="nav__auth-link">
-            "Sign In"
+            Sign In
           </Link>
         )}
       </div>
