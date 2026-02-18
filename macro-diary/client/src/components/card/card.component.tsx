@@ -5,9 +5,11 @@ type CardProps = {
     id: number
     user_id: number
     meal_name: string
-    protein: number
     carbs: number
     fat: number
+    notes: string
+    protein: number
+    units: number
     created_at: string
   }
 }
@@ -21,7 +23,7 @@ export const Card = ({ card }: CardProps) => (
     <div className="macros">
       <span className="macro-pill">Protein {card.protein}g</span>
       <span className="macro-pill">Carbs {card.carbs}g</span>
-      <span className="macro-pill">Fat {card.fat}g</span>
+      <span className="macro-pill">Units {card.units}</span>
     </div>
 
     <small>{new Date(card.created_at).toLocaleDateString()}</small>

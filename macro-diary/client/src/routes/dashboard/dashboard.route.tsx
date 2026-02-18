@@ -5,6 +5,7 @@ import { getCards } from "../../features/cards/cardsApiSlice"
 
 import { Card } from "../../components/card/card.component"
 import { CardEditorModal } from "../../components/card-editor-modal/card-editor-modal.component"
+import { openModal } from "../../features/cards/cardsApiSlice"
 
 import "./dashboard.styles.scss"
 
@@ -21,8 +22,8 @@ export const Dashboard = () => {
   return (
     <div className="card-container">
       {isModalOpen && (
-        <div className="card-editor-modal">
-          <CardEditorModal card={selectedCard} />
+        <div>
+          <CardEditorModal card={selectedCard ?? {}} />
         </div>
       )}
       <h1>Cards</h1>
@@ -40,7 +41,7 @@ export const Dashboard = () => {
         <div
           className="card add-card"
           onClick={() => {
-            console.log("card clicked")
+            dispatch(openModal(null))
           }}
         >
           <span className="plus">+</span>
