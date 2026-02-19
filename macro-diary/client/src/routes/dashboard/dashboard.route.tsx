@@ -41,7 +41,7 @@ export const Dashboard = () => {
         <div
           className="card add-card"
           onClick={() => {
-            dispatch(openModal(null))
+            dispatch(openModal())
           }}
         >
           <span className="plus">+</span>

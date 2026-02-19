@@ -5,7 +5,7 @@ import { closeModal } from "../../features/cards/cardsApiSlice"
 
 import "./card-editor-modal.styles.scss"
 
-export const CardEditorModal = ({ card }) => {
+export const CardEditorModal = card => {
   const [formState, setFormState] = useState(card)
   const dispatch = useAppDispatch()
 
@@ -31,7 +31,17 @@ export const CardEditorModal = ({ card }) => {
     //   dispatch(updateCard(formState))
     // } else {
     // }
-    dispatch(addCard(formState))
+    const payload = {
+      meal_name: formState.meal_name,
+      carbs: Number(formState.carbs),
+      fat: Number(formState.fat),
+      protein: Number(formState.protein),
+      units: Number(formState.units),
+      notes: formState.notes,
+    }
+
+    dispatch(addCard(payload))
+    dispatch(closeModal())
   }
 
   const handleClose = () => {
@@ -41,48 +51,68 @@ export const CardEditorModal = ({ card }) => {
   return (
     <div className="modal-overlay">
       <div className="card-editor-modal">
-        <h2>{formState.id ? "Edit Meal" : "Create new Meal"}</h2>
+        <h2>{id ? "Edit Meal" : "Create new Meal"}</h2>
 
         <div className="card-editor-modal__form">
+          <label>Meal Name</label>
           <input
-            onChange={e => handleChange(e)}
+            name="meal_name"
+            onChange={e => {
+              handleChange(e)
+            }}
             placeholder="Meal Name"
-            value={formState?.meal_name ?? ""}
+            value={meal_name ?? ""}
           />
+          <label>Carbs</label>
           <input
+            name="carbs"
             onChange={e => handleChange(e)}
             placeholder="Carbs"
-            value={formState?.carbs ?? ""}
+            value={carbs ?? ""}
           />
+          <label>Fat</label>
           <input
+            name="fat"
             onChange={e => handleChange(e)}
             placeholder="Fat"
-            value={formState?.fat ?? ""}
+            value={fat ?? ""}
           />
+          <label>Protein</label>
           <input
+            name="protein"
             onChange={e => handleChange(e)}
             placeholder="Protein"
-            value={formState?.protein ?? ""}
+            value={protein ?? ""}
           />
+          <label>Units</label>
           <input
+            name="units"
             onChange={e => handleChange(e)}
             placeholder="Units"
-            value={formState?.units ?? ""}
+            value={units ?? ""}
           />
-          <input
+          <label>Notes</label>
+          <textarea
+            name="notes"
             onChange={e => handleChange(e)}
             placeholder="Notes"
-            value={formState?.notes ?? ""}
+            value={notes ?? ""}
           />
         </div>
 
         <div className="card-editor-modal__actions">
-          <button className="btn-cancel" onClick={handleClose}>
-            Cancel
-          </button>
-          <button className="btn-save" onClick={handleSave}>
-            Save
-          </button>
+          <div className="left-actions">
+            {id && <button className="btn-delete">Delete</button>}
+          </div>
+
+          <div className="right-actions">
+            <button className="btn-cancel" onClick={handleClose}>
+              Cancel
+            </button>
+            <button className="btn-save" onClick={handleSave}>
+              Save
+            </button>
+          </div>
         </div>
       </div>
     </div>

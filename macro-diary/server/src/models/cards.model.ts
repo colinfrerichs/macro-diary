@@ -29,6 +29,8 @@ export const addCardByUserId = async({ user_id, meal_name, carbs, fat, notes, pr
     const {error, data} = await supabaseAdmin
         .from("cards")
         .insert({ user_id, meal_name, carbs, fat, notes, protein, units })
+        .select()
+        .single()
 
     if (error) {
         throw new Error(error.message)

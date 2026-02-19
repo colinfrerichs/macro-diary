@@ -101,7 +101,7 @@ export const cardSlice = createSlice({
     initialState,
     reducers: {
         openModal: (state, action) => {
-            state.selectedCard = action.payload || null
+            state.selectedCard = action?.payload ?? null
             state.isModalOpen = true
         },
         closeModal: (state) => {
@@ -113,6 +113,9 @@ export const cardSlice = createSlice({
         builder
         .addCase(getCards.fulfilled, (state, action) => {
             state.cards = action.payload
+        })
+        .addCase(addCard.fulfilled, (state, action) => {
+            state.cards.push(action.payload)
         })
     }
 })
