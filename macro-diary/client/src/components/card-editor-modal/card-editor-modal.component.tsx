@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react"
-import { useAppDispatch } from "../../app/hooks"
-import { addCard } from "../../features/cards/cardsApiSlice"
-import { closeModal } from "../../features/cards/cardsApiSlice"
 
 import "./card-editor-modal.styles.scss"
 
-export const CardEditorModal = card => {
+export const CardEditorModal = ({ card, onClose, onSave }) => {
   const [formState, setFormState] = useState(card)
-  const dispatch = useAppDispatch()
 
   const { id, meal_name, carbs, fat, notes, protein, units } = formState
 
@@ -24,28 +20,6 @@ export const CardEditorModal = card => {
         [name]: value,
       }
     })
-  }
-
-  const handleSave = () => {
-    // if (formState.id) {
-    //   dispatch(updateCard(formState))
-    // } else {
-    // }
-    const payload = {
-      meal_name: formState.meal_name,
-      carbs: Number(formState.carbs),
-      fat: Number(formState.fat),
-      protein: Number(formState.protein),
-      units: Number(formState.units),
-      notes: formState.notes,
-    }
-
-    dispatch(addCard(payload))
-    dispatch(closeModal())
-  }
-
-  const handleClose = () => {
-    dispatch(closeModal())
   }
 
   return (
@@ -106,10 +80,15 @@ export const CardEditorModal = card => {
           </div>
 
           <div className="right-actions">
-            <button className="btn-cancel" onClick={handleClose}>
+            <button className="btn-cancel" onClick={onClose}>
               Cancel
             </button>
-            <button className="btn-save" onClick={handleSave}>
+            <button
+              className="btn-save"
+              onClick={() => {
+                onSave(formState)
+              }}
+            >
               Save
             </button>
           </div>

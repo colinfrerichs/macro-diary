@@ -12,10 +12,16 @@ type Card = {
   created_at: string
 }
 
-const initialState = {
+type CardState = {
+    cards: Card[]
+    status: "idle" | "loading" | "succeeded" | "failed"
+    error?: string
+}
+
+const initialState: CardState = {
     cards: [],
-    selectedCard: null,
-    isModalOpen: false,
+    status: "idle",
+    error: undefined,
 }
 
 const API_URL = "http://localhost:5000/api/cards"
@@ -41,8 +47,7 @@ export const addCard = createAsyncThunk(
             return thunkAPI.rejectWithValue(errorData.message ?? "Failed to add card.")
         }
 
-        const data = await response.json()
-        return data
+        return await response.json()
     }
 )
 
@@ -66,8 +71,7 @@ export const deleteCard = createAsyncThunk(
             return thunkAPI.rejectWithValue(errorData.message ?? "Failed to delete card.")
         }
 
-        const data = await response.json()
-        return data
+        return await response.json()
     }
 )
 
@@ -91,34 +95,66 @@ export const getCards = createAsyncThunk(
             return thunkAPI.rejectWithValue(errorData.message ?? "Failed to pull cards.")
         }
 
-        const data = await response.json()
-        return data
+        return await response.json()
+    }
+)
+
+export const updateCard = createAsyncThunk(
+    "cards/updateCard",
+    async(card: Card, thunkAPI) => {
+        const token = localStorage.getItem("token")
+
+        if (!token) throw new Error("No Auth token found.")
+
+        const response = await fetch(`${API_URL}/${card.id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify(card)
+        })
+
+        if(!response.ok) {
+            const errorData = await response.json()
+            return thunkAPI.rejectWithValue(errorData.message ?? "Failed to update card.")
+        }
+
+        return await response.json()
     }
 )
 
 export const cardSlice = createSlice({
     name: "cards",
     initialState,
-    reducers: {
-        openModal: (state, action) => {
-            state.selectedCard = action?.payload ?? null
-            state.isModalOpen = true
-        },
-        closeModal: (state) => {
-            state.selectedCard = null
-            state.isModalOpen = false
-        }
-    },
+    reducers: {},
     extraReducers: builder => {
         builder
+        .addCase(getCards.pending, state => {
+            state.status = "loading"
+            state.error = undefined
+        })
         .addCase(getCards.fulfilled, (state, action) => {
             state.cards = action.payload
+            state.status = "succeeded"
+        })
+        .addCase(getCards.rejected, (state, action) => {
+            state.status = "failed"
+            state.error = action.error.message
+        })
+        .addCase(addCard.pending, state => {
+            state.status = "loading"
         })
         .addCase(addCard.fulfilled, (state, action) => {
             state.cards.push(action.payload)
+            state.status = "succeeded"
         })
+        .addCase(addCard.rejected, (state, action) => {
+            state.status = "failed"
+            state.error = action.error.message
+        })
+        // .addCase(updateCard)
     }
 })
 
-export const { openModal, closeModal } = cardSlice.actions
 export default cardSlice.reducer

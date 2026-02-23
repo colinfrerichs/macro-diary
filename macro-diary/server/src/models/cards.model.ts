@@ -41,4 +41,4 @@ export const addCardByUserId = async({ user_id, meal_name, carbs, fat, notes, pr
 
 export const deleteCard = async() => {}
 
-export const updateCard = async() => {}
+export const updateCardById = async(card) => {}

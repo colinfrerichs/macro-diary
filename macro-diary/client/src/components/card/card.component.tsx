@@ -14,9 +14,16 @@ type CardProps = {
   }
 }
 
-export const Card = ({ card }: CardProps) => (
+export const Card = ({ card, handleOpen }: { card: CardProps }) => (
   <div className="card">
-    <button className="card__edit-btn">Edit</button>
+    <button
+      className="card__edit-btn"
+      onClick={() => {
+        handleOpen(card)
+      }}
+    >
+      Edit
+    </button>
 
     <h2>{card.meal_name}</h2>
 
