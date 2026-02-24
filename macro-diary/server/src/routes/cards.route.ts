@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { getCards, addCard } from "../controllers/cards.controller"
-import { updateCard } from "../models/cards.model"
+import { updateCard } from "../controllers/cards.controller"
 
 const router = Router()
 

@@ -41,4 +41,17 @@ export const addCardByUserId = async({ user_id, meal_name, carbs, fat, notes, pr
 
 export const deleteCard = async() => {}
 
-export const updateCardById = async(card) => {}
+export const updateCardById = async(id: number, card: Card) => {
+    const { data, error } = await supabaseAdmin
+        .from("cards")
+        .update({ ...card })
+        .eq("id", id)
+        .select()
+        .single()
+    
+    if (error) {
+        throw new Error(error.message)
+    }
+
+    return data
+}

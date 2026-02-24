@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom"
+
 import "./card.style.scss"
 
 type CardProps = {
@@ -14,25 +16,29 @@ type CardProps = {
   }
 }
 
-export const Card = ({ card, handleOpen }: { card: CardProps }) => (
-  <div className="card">
-    <button
-      className="card__edit-btn"
-      onClick={() => {
-        handleOpen(card)
-      }}
-    >
-      Edit
-    </button>
+export const Card = ({ card }: { card: CardProps }) => {
+  const navigate = useNavigate()
 
-    <h2>{card.meal_name}</h2>
+  return (
+    <div className="card">
+      <button
+        className="card__edit-btn"
+        onClick={() => {
+          navigate(`/cards/${card.id}`)
+        }}
+      >
+        Edit
+      </button>
 
-    <div className="macros">
-      <span className="macro-pill">Protein {card.protein}g</span>
-      <span className="macro-pill">Carbs {card.carbs}g</span>
-      <span className="macro-pill">Units {card.units}</span>
+      <h2>{card.meal_name}</h2>
+
+      <div className="macros">
+        <span className="macro-pill">Protein {card.protein}g</span>
+        <span className="macro-pill">Carbs {card.carbs}g</span>
+        <span className="macro-pill">Units {card.units}</span>
+      </div>
+
+      <small>{new Date(card.created_at).toLocaleDateString()}</small>
     </div>
-
-    <small>{new Date(card.created_at).toLocaleDateString()}</small>
-  </div>
-)
+  )
+}

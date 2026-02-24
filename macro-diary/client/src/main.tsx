@@ -8,10 +8,11 @@ import { useAppDispatch } from "./app/hooks"
 import { setCurrentUser } from "./features/user/userApiSlice"
 
 import { AuthRoute } from "./routes/authentication/authentication.route"
-import { Navigation } from "./routes/navigation/navigation.route"
+import { CardEditorModal } from "./components/card-editor-modal/card-editor-modal.component"
 import { Dashboard } from "./routes/dashboard/dashboard.route"
-import { PublicOnlyRoute } from "./routes/public-route/public-only-route.route"
+import { Navigation } from "./routes/navigation/navigation.route"
 import { ProtectedRoute } from "./routes/protected-route/protected-route.route"
+import { PublicOnlyRoute } from "./routes/public-route/public-only-route.route"
 
 import { store } from "./app/store"
 
@@ -32,11 +33,21 @@ const router = createBrowserRouter([
         element: <Navigation />,
         children: [
           {
-            index: true,
+            path: "/",
             element: <Dashboard />,
+            children: [
+              {
+                path: "/cards/new",
+                element: <CardEditorModal />,
+              },
+              {
+                path: "/cards/:id",
+                element: <CardEditorModal />,
+              },
+            ],
           },
           {
-            path: "/profile",
+            path: "profile",
             element: <h1>Profile page.</h1>,
           },
         ],
