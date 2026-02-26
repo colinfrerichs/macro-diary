@@ -28,7 +28,6 @@ const API_URL = "http://localhost:5000/api/cards"
 
 // Helper functions
 const updateStoreCards = (state, updatedCard) => {
-    console.log('does this even hit')
     return state.cards.map((card) => {
         if (card.id === updatedCard.id) {
             return {
@@ -134,11 +133,7 @@ export const updateCard = createAsyncThunk(
             return thunkAPI.rejectWithValue(errorData.message ?? "Failed to update card.")
         }
 
-        console.log('hello')
-        const data = await response.json()
-        console.log(data)
-
-        return data
+        return await response.json()
     }
 )
 
