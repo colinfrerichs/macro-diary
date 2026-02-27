@@ -27,6 +27,12 @@ const initialState: CardState = {
 const API_URL = "http://localhost:5000/api/cards"
 
 // Helper functions
+/*
+    Given the cards are likely not to be in the thousands - I feel like this is okay.
+    If it ever _could_ become a problem, implementing pagination or something could be better
+    and just refetch the entire list. As it stands, for a demo, and for folks who probably wont have many
+    cards I feel okay with this.
+*/
 const updateStoreCards = (state, updatedCard) => {
     return state.cards.map((card) => {
         if (card.id === updatedCard.id) {

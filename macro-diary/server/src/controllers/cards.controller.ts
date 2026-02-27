@@ -1,52 +1,42 @@
 import { Request, Response } from "express"
-import { addCardByUserId, findCardsByUserId, updateCardById } from "../models/cards.model"
+import { addCardByUserId, deleteCardById, findCardsByUserId, updateCardById } from "../models/cards.model"
 
-export const getCards = async (req: Request, res: Response) => {
-    if (!req.user) return res.status(401).json({ message: "No authenticated user." })
+const asyncHandler = (fn: Function) => (req: Request, res: Response, next: Function) => Promise.resolve(fn(req, res, next)).catch(next)
 
-    try {
-        const cards = await findCardsByUserId({user_id: req.user.userId})
-        
-        return res.status(200).json(cards)
-    } catch (error) {
-        return res.status(500).json({ message: "Failed to retrieve cards" })
-    }
-}
-
-export const addCard = async(req: Request, res: Response) => {
-    if (!req.user) return res.status(401).json({ message: "No authenticated user." })
-
-    const card = req.body
-
-    if (!card) return res.status(401).json({message: "Missing card for update."})
-
+export const addCard = asyncHandler(async (req: Request, res: Response) => {
     const newCard = {
-        ...card,
-        user_id: req.user.userId
+        ...req.body,
+        user_id: req.user.userId,
     }
 
-    try {
-        const createdCard = await addCardByUserId(newCard)
-        
-        return res.status(201).json(createdCard)
-    } catch (error) {
-        return res.status(500).json({ message: "Failed to create new card." })
+    const createdCard = await addCardByUserId(newCard)
+    res.status(201).json(createdCard)
+})
+
+export const deleteCard = asyncHandler(async (req: Request, res: Response) => {
+    const { card_id } = req.params
+
+    if (!card_id) {
+        return res.status(400).json({message: "Missing card_id."})
     }
-}
 
-export const updateCard = async(req: Request, res: Response) => {
-    if (!req.user) return res.status(401).json({ message: "no authenticated user." })
+    const deletedCard = await deleteCardById(card_id)
+    
+    res.status(200).json(deletedCard)
+})
 
-    const card = req.body
+export const getCards = asyncHandler(async (req: Request, res: Response) => {
+    const cards = await findCardsByUserId({ user_id: req.user.userId })
+    res.status(200).json(cards)
+})
 
-    if (!card) return res.status(401).json({ message: "Missing card to update." })
-
-    try {
-        const { card_id } = req.params
-        const updatedCard = await updateCardById(card_id, req.body)
-        
-        return res.status(200).json(updatedCard)
-    } catch (error) {
-        return res.status(500).json({ message: "Failed to update card." })
+export const updateCard = asyncHandler(async (req: Request, res: Response) => {
+    const { card_id } = req.params
+    
+    if (!card_id) {
+        return res.status(400).json({message: "Missing card_id."})
     }
-}
+
+    const updatedCard = await updateCardById(card_id, req.body)
+    res.status(200).json(updatedCard)
+})
