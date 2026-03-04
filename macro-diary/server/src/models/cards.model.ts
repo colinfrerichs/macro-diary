@@ -12,19 +12,6 @@ type Card = {
   created_at: string
 }
 
-export const findCardsByUserId = async({ user_id }: { user_id: number }) => {
-    const { data, error } = await supabaseAdmin
-    .from("cards")
-    .select("*")
-    .eq("user_id", user_id)
-
-    if (error) {
-        throw new Error(error.message)
-    }
-
-    return data
-}
-
 export const addCardByUserId = async({ user_id, meal_name, carbs, fat, notes, protein, units }: Card) => {
     const {error, data} = await supabaseAdmin
         .from("cards")
@@ -39,7 +26,20 @@ export const addCardByUserId = async({ user_id, meal_name, carbs, fat, notes, pr
     return data
 }
 
-export const deleteCard = async() => {}
+export const deleteCardById = async() => {}
+
+export const findCardsByUserId = async({ user_id }: { user_id: number }) => {
+    const { data, error } = await supabaseAdmin
+    .from("cards")
+    .select("*")
+    .eq("user_id", user_id)
+
+    if (error) {
+        throw new Error(error.message)
+    }
+
+    return data
+}
 
 export const updateCardById = async(id: number, card: Card) => {
     const { data, error } = await supabaseAdmin

@@ -1,4 +1,6 @@
-import { addCardByUserId, deleteCardById, findCardsById, findCardsByUserId, updateCardById } from "../models/cards.model"
+import { addCardByUserId, deleteCardById, findCardsByUserId, updateCardById } from "../models/cards.model"
 
-export const updateCard = async (cardId, data) => {
-}
+export const addCardService = async () => {}
+export const deleteCardService = async () => {}
+export const getCardsService = async () => {}
+export const updateCardService = async () => {}

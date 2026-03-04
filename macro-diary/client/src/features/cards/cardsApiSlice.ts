@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { apiFetch } from "../../services/apiFetch";
 
 type Card = {
   id: string
@@ -48,16 +49,8 @@ const updateStoreCards = (state, updatedCard) => {
 export const addCard = createAsyncThunk(
     "cards/addCard",
     async (card: Card, thunkAPI) => {
-        const token = localStorage.getItem("token")
-
-        if (!token) throw new Error("No Auth token found.")
-
-        const response = await fetch(`${API_URL}`, {
+        const response = await apiFetch(`${API_URL}`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
             body: JSON.stringify(card)
         })
 
@@ -73,16 +66,8 @@ export const addCard = createAsyncThunk(
 export const deleteCard = createAsyncThunk(
     "cards/deleteCard",
     async (card: Card, thunkAPI) => {
-        const token = localStorage.getItem("token")
-
-        if (!token) throw new Error("No Auth token found.")
-        
-        const response = await fetch(`${API_URL}/${card.id}`, {
+        const response = await apiFetch(`${API_URL}/${card.id}`, {
             method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
         })
 
         if (!response.ok) {
@@ -97,16 +82,8 @@ export const deleteCard = createAsyncThunk(
 export const getCards = createAsyncThunk(
     "cards/fetchCards",
     async (_, thunkAPI) => {
-        const token = localStorage.getItem("token")
-
-        if (!token) throw new Error("No Auth token found.")
-
-        const response = await fetch(`${API_URL}`, {
+        const response = await apiFetch(`${API_URL}`, {
             method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            }
         })
 
         if (!response.ok) {
@@ -121,16 +98,8 @@ export const getCards = createAsyncThunk(
 export const updateCard = createAsyncThunk(
     "cards/updateCard",
     async(card: Card, thunkAPI) => {
-        const token = localStorage.getItem("token")
-
-        if (!token) throw new Error("No Auth token found.")
-
-        const response = await fetch(`${API_URL}/${card.id}`, {
+        const response = await apiFetch(`${API_URL}/${card.id}`, {
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
             body: JSON.stringify(card)
         })
 
