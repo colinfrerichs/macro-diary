@@ -39,7 +39,8 @@ export const CardEditorModal = () => {
   }
 
   const handleDelete = async () => {
-    await dispatch(deleteCard)
+    await dispatch(deleteCard(formState))
+    navigate("/")
   }
 
   const handleSave = async () => {

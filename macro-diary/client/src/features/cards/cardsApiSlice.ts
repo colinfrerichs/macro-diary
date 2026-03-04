@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { apiFetch } from "../../services/apiFetch";
+import { useAppDispatch } from "../../app/hooks";
 
 type Card = {
   id: string
@@ -49,9 +50,9 @@ const updateStoreCards = (state, updatedCard) => {
 export const addCard = createAsyncThunk(
     "cards/addCard",
     async (card: Card, thunkAPI) => {
-        const response = await apiFetch(`${API_URL}`, {
+        const response = await apiFetch(thunkAPI.dispatch, `${API_URL}`, {
             method: "POST",
-            body: JSON.stringify(card)
+            body: JSON.stringify(card),
         })
 
         if (!response.ok) {
@@ -66,8 +67,10 @@ export const addCard = createAsyncThunk(
 export const deleteCard = createAsyncThunk(
     "cards/deleteCard",
     async (card: Card, thunkAPI) => {
-        const response = await apiFetch(`${API_URL}/${card.id}`, {
+        console.log(card.id)
+        const response = await apiFetch(thunkAPI.dispatch, `${API_URL}/${card.id}`, {
             method: "DELETE",
+            body: JSON.stringify(card),
         })
 
         if (!response.ok) {
@@ -82,7 +85,7 @@ export const deleteCard = createAsyncThunk(
 export const getCards = createAsyncThunk(
     "cards/fetchCards",
     async (_, thunkAPI) => {
-        const response = await apiFetch(`${API_URL}`, {
+        const response = await apiFetch(thunkAPI.dispatch, `${API_URL}`, {
             method: "GET",
         })
 
@@ -98,9 +101,9 @@ export const getCards = createAsyncThunk(
 export const updateCard = createAsyncThunk(
     "cards/updateCard",
     async(card: Card, thunkAPI) => {
-        const response = await apiFetch(`${API_URL}/${card.id}`, {
+        const response = await apiFetch(thunkAPI.dispatch, `${API_URL}/${card.id}`, {
             method: "PUT",
-            body: JSON.stringify(card)
+            body: JSON.stringify(card),
         })
 
         if(!response.ok) {

@@ -1,7 +1,6 @@
-import { useAppDispatch } from "../app/hooks"
 import { logout } from "../features/user/userApiSlice"
 
-export const apiFetch = async (url: string, options: RequestInit = {}) => {
+export const apiFetch = async (dispatch, url: string, options: RequestInit = {}) => {
     const token = localStorage.getItem("token")
 
     if (!token) throw new Error("No Auth token found.")
@@ -16,7 +15,7 @@ export const apiFetch = async (url: string, options: RequestInit = {}) => {
     })
 
     if (response.status === 401 || response.status === 403) {
-        useAppDispatch(logout())
+        dispatch(logout())
         throw new Error("Unauthorized")
     }
 
