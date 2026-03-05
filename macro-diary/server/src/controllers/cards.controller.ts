@@ -18,13 +18,12 @@ export const deleteCard = asyncHandler(async (req: Request, res: Response) => {
     const card = req.body
     const user_id = req.user.userId;
 
-    console.log(card_id, card, user_id)
-
     if (!card_id || !user_id) {
         return res.status(400).json({message: "Missing card_id or user_id."})
     }
 
     const deletedCard = await deleteCardService(card_id, card, user_id)
+    console.log(deletedCard)
     
     res.status(200).json(deletedCard)
 })

@@ -67,7 +67,6 @@ export const addCard = createAsyncThunk(
 export const deleteCard = createAsyncThunk(
     "cards/deleteCard",
     async (card: Card, thunkAPI) => {
-        console.log(card.id)
         const response = await apiFetch(thunkAPI.dispatch, `${API_URL}/${card.id}`, {
             method: "DELETE",
             body: JSON.stringify(card),
@@ -77,6 +76,8 @@ export const deleteCard = createAsyncThunk(
             const errorData = await response.json()
             return thunkAPI.rejectWithValue(errorData.message ?? "Failed to delete card.")
         }
+
+        console.log(response.json())
 
         return await response.json()
     }
